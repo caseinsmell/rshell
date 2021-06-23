@@ -1,7 +1,7 @@
 use std::io::{self,Write};
 use std::str::FromStr;
-mod commands; 
 mod utils;
+mod commands; 
 
 
 #[cfg(test)]
