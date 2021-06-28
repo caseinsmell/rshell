@@ -47,18 +47,16 @@ struct Command {
 }
 
 // TODO:
-// cd 
 // cp
 // grep
 // ls
 // mv
-// rm
 enum Builtin {
     Echo,
     Exit,
     Cat,
     Pwd,
-    Cd,
+    Rm,
 }
 
 impl FromStr for Builtin {
@@ -69,7 +67,7 @@ impl FromStr for Builtin {
             "exit" => Ok(Builtin::Exit),
             "cat" => Ok(Builtin::Cat),
             "pwd" => Ok(Builtin::Pwd),
-            "cd" => Ok(Builtin::Cd),
+            "rm" => Ok(Builtin::Rm),
             _ => Err(()),
         }
     }
@@ -82,7 +80,7 @@ fn process_command(c : Command) -> i32 {
         Ok(Builtin::Exit) => commands::builtin_exit(),
         Ok(Builtin::Cat) => commands::builtin_cat(&c.args),
         Ok(Builtin::Pwd) => commands::builtin_pwd(),
-        Ok(Builtin::Cd) => commands::builtin_cd(&c.args),
+        Ok(Builtin::Rm) => commands::builtin_rm(&c.args),
         _ => {
             println!("{}: command not yet implemented", &c.keyword);
             1
