@@ -2,10 +2,10 @@ use std::process;
 use std::env;
 use std::io::prelude::*;
 use std::fs::File;
+use std::path::Path;
 use std::fs;   
 use crate::utils::debug;
 
-// Implementation of echo
 pub fn builtin_echo(args : &Vec<String>) -> i32 {
     println!("{}", args.join(" "));
     0
@@ -23,15 +23,21 @@ pub fn builtin_cat(args : &Vec<String>) -> i32 {
     for arg in args {
         debug(format!("reading the file {}", arg));
 
-        let mut file = File::open(&arg)
-            .expect("Could not read the file");
+        // Create a path to the desired file
+        let path = Path::new(arg);
+        let display = path.display();
 
-        let mut contents = String::new();
+        //TODO: find a way to print out the error instead of panicking
+        let mut file = match File::open(&path) {
+            Err(why) => panic!("couldn't open {}: {}", display, why),
+            Ok(file) => file,
+        };
 
-        file.read_to_string(&mut contents)
-            .expect("Could not read the contents of the file");
-
-        println!("{}", contents);
+        let mut s = String::new();
+        match file.read_to_string(&mut s) {
+            Err(why) => println!("couldn't read {}: {}", display, why),
+            Ok(_) => print!("{}\n {}", display, s),
+        }
     }
     0
 }
