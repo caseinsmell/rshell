@@ -46,10 +46,6 @@ struct Command {
     args: Vec<String>,
 }
 
-// TODO:
-// cp
-// grep
-// mv
 enum Builtin {
     Echo,
     Exit,
@@ -58,6 +54,7 @@ enum Builtin {
     Rm,
     Ls,
     Mkdir,
+    Clear,
 }
 
 impl FromStr for Builtin {
@@ -71,6 +68,7 @@ impl FromStr for Builtin {
             "rm" => Ok(Builtin::Rm),
             "ls" => Ok(Builtin::Ls),
             "mkdir" => Ok(Builtin::Mkdir),
+            "clear" => Ok(Builtin::Clear),
             _ => Err(()),
         }
     }
@@ -86,6 +84,7 @@ fn process_command(c : Command) -> i32 {
         Ok(Builtin::Rm) => commands::builtin_rm(&c.args),
         Ok(Builtin::Ls) => commands::builtin_ls(&c.args),
         Ok(Builtin::Mkdir) => commands::builtin_mkdir(&c.args),
+        Ok(Builtin::Clear) => commands::builtin_clear(),
         _ => {
             println!("{}: command not yet implemented", &c.keyword);
             1
@@ -101,6 +100,7 @@ fn print_prompt() {
 
 fn read_command() -> String {
     let mut command = String::new();
+    
     io::stdin().read_line(&mut command)
         .expect("Failed to read command");
 

@@ -116,3 +116,10 @@ pub fn builtin_mkdir(args : &Vec<String>) -> i32 {
     fs::create_dir(&args[0]);
     0
 }
+
+pub fn builtin_clear() -> i32 {
+
+    // Nice little hack, may not always work
+    print!("\x1B[2J");
+    0
+}
