@@ -40,7 +40,7 @@ mod unittest_tokenize_command {
     }
 }
 
-
+// This is the structure of a command
 struct Command {
     keyword: String,
     args: Vec<String>,
@@ -49,7 +49,6 @@ struct Command {
 // TODO:
 // cp
 // grep
-// ls
 // mv
 enum Builtin {
     Echo,
@@ -57,6 +56,8 @@ enum Builtin {
     Cat,
     Pwd,
     Rm,
+    Ls,
+    Mkdir,
 }
 
 impl FromStr for Builtin {
@@ -68,6 +69,8 @@ impl FromStr for Builtin {
             "cat" => Ok(Builtin::Cat),
             "pwd" => Ok(Builtin::Pwd),
             "rm" => Ok(Builtin::Rm),
+            "ls" => Ok(Builtin::Ls),
+            "mkdir" => Ok(Builtin::Mkdir),
             _ => Err(()),
         }
     }
@@ -81,6 +84,8 @@ fn process_command(c : Command) -> i32 {
         Ok(Builtin::Cat) => commands::builtin_cat(&c.args),
         Ok(Builtin::Pwd) => commands::builtin_pwd(),
         Ok(Builtin::Rm) => commands::builtin_rm(&c.args),
+        Ok(Builtin::Ls) => commands::builtin_ls(&c.args),
+        Ok(Builtin::Mkdir) => commands::builtin_mkdir(&c.args),
         _ => {
             println!("{}: command not yet implemented", &c.keyword);
             1

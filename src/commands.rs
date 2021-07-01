@@ -55,7 +55,6 @@ pub fn builtin_rm(args : &Vec<String>) -> i32 {
         
         let meta = fs::metadata(arg).unwrap();
       
-        
         if meta.is_dir() {
 
             debug(format!("Removing the directory {}", arg));
@@ -67,8 +66,8 @@ pub fn builtin_rm(args : &Vec<String>) -> i32 {
             }
 
         } else if meta.is_file() {
-
             debug(format!("Removing the file {}", arg));
+
             let file_removed = fs::remove_file(arg);
 
             match file_removed {
@@ -79,7 +78,41 @@ pub fn builtin_rm(args : &Vec<String>) -> i32 {
         } else {
             println!("Could not identify file {}", arg);
         }
-
     } 
     -1
+}
+
+pub fn builtin_ls(args : &Vec<String>) -> i32 {
+    
+    if args.len() == 0 {
+        debug(format!("Starting on current directory"));
+        
+        let paths = fs::read_dir(".").unwrap();
+        
+        for path in paths {
+            print!("{}\t", path.unwrap().path().display());
+        }
+
+    } else {
+        debug(format!("Using dir {}", args[0]));
+
+        let paths = fs::read_dir(&args[0]).unwrap();
+        
+        for path in paths {
+            print!("{}\t", path.unwrap().path().display());
+        }
+    
+    }
+    0
+}
+
+pub fn builtin_mkdir(args : &Vec<String>) -> i32 {
+    
+    if args.len() <= 0 {
+        println!("ERR: Provide a name for the directory");
+        return -1;
+    }
+
+    fs::create_dir(&args[0]);
+    0
 }
