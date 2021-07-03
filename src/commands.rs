@@ -6,6 +6,7 @@ use std::path::Path;
 use std::fs;   
 use crate::utils::debug;
 
+
 pub fn builtin_echo(args : &Vec<String>) -> i32 {
     println!("{}", args.join(" "));
     0
@@ -35,7 +36,7 @@ pub fn builtin_cat(args : &Vec<String>) -> i32 {
 
         let mut s = String::new();
         match file.read_to_string(&mut s) {
-            Err(why) => println!("couldn't read {}: {}", display, why),
+            Err(why) =>  println!("couldn't read {}: {}", display, why),
             Ok(_) => print!("{}\n {}", display, s),
         }
     }
@@ -92,18 +93,27 @@ pub fn builtin_ls(args : &Vec<String>) -> i32 {
         for path in paths {
             print!("{}\t", path.unwrap().path().display());
         }
+        0
 
     } else {
         debug(format!("Using dir {}", args[0]));
 
-        let paths = fs::read_dir(&args[0]).unwrap();
-        
-        for path in paths {
-            print!("{}\t", path.unwrap().path().display());
+        let dir = Path::new(&args[0]);
+
+        if dir.is_dir() {
+     
+            let paths = fs::read_dir(&args[0]).unwrap();
+
+            for path in paths {
+                print!("{}\t", path.unwrap().path().display());
+            }
+            0
+
+        } else {
+            println!("{} not found", &args[0]);
+            1
         }
-    
     }
-    0
 }
 
 pub fn builtin_mkdir(args : &Vec<String>) -> i32 {
@@ -113,12 +123,16 @@ pub fn builtin_mkdir(args : &Vec<String>) -> i32 {
         return -1;
     }
 
-    fs::create_dir(&args[0]);
-    0
+    match fs::create_dir(&args[0]) {
+        Err(why) => {
+            println!("ERR: Could not create the directory {}. {}", &args[0], why);
+            1
+        }
+        Ok(_) => 0,
+    }
 }
 
 pub fn builtin_clear() -> i32 {
-
     // Nice little hack, may not always work
     print!("\x1B[2J");
     0
