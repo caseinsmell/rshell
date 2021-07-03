@@ -55,6 +55,7 @@ enum Builtin {
     Ls,
     Mkdir,
     Clear,
+    Help,
 }
 
 impl FromStr for Builtin {
@@ -69,6 +70,7 @@ impl FromStr for Builtin {
             "ls" => Ok(Builtin::Ls),
             "mkdir" => Ok(Builtin::Mkdir),
             "clear" => Ok(Builtin::Clear),
+            "help" => Ok(Builtin::Help),
             _ => Err(()),
         }
     }
@@ -84,6 +86,7 @@ fn process_command(c : Command) -> i32 {
         Ok(Builtin::Rm) => commands::builtin_rm(&c.args),
         Ok(Builtin::Ls) => commands::builtin_ls(&c.args),
         Ok(Builtin::Mkdir) => commands::builtin_mkdir(&c.args),
+        Ok(Builtin::Help) => commands::builtin_help(),
         Ok(Builtin::Clear) => commands::builtin_clear(),
         _ => {
             println!("{}: command not yet implemented", &c.keyword);

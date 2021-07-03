@@ -7,6 +7,20 @@ use std::fs;
 use crate::utils::debug;
 
 
+pub fn builtin_help() -> i32 {
+    println!("Implemented commands:\n");
+    println!("echo");
+    println!("exit");
+    println!("cat");
+    println!("pwd");
+    println!("rm");
+    println!("ls");
+    println!("mkdir");
+    println!("clear");
+    0
+} 
+
+
 pub fn builtin_echo(args : &Vec<String>) -> i32 {
     println!("{}", args.join(" "));
     0
